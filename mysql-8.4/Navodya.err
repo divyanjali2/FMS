@@ -1,0 +1,18 @@
+2025-10-01T05:59:56.181251Z 0 [System] [MY-015017] [Server] MySQL Server Initialization - start.
+2025-10-01T05:59:56.207116Z 0 [System] [MY-013169] [Server] C:\laragon\bin\mysql\mysql-8.4.3-winx64\bin\mysqld.exe (mysqld 8.4.3) initializing of server in progress as process 6528
+2025-10-01T05:59:56.239891Z 0 [ERROR] [MY-010457] [Server] --initialize specified but the data directory has files in it. Aborting.
+2025-10-01T05:59:56.240604Z 0 [ERROR] [MY-013236] [Server] The designated data directory C:\laragon\www\fms\mysql-8.4\ is unusable. You can remove all files that the server added to it.
+2025-10-01T05:59:56.250606Z 0 [ERROR] [MY-010119] [Server] Aborting
+2025-10-01T05:59:56.256983Z 0 [System] [MY-015018] [Server] MySQL Server Initialization - end.
+2025-10-16T10:25:55.898632Z 0 [System] [MY-015017] [Server] MySQL Server Initialization - start.
+2025-10-16T10:25:55.952795Z 0 [System] [MY-013169] [Server] C:\laragon\bin\mysql\mysql-8.4.3-winx64\bin\mysqld.exe (mysqld 8.4.3) initializing of server in progress as process 14448
+2025-10-16T10:25:56.001252Z 0 [ERROR] [MY-010457] [Server] --initialize specified but the data directory has files in it. Aborting.
+2025-10-16T10:25:56.013538Z 0 [ERROR] [MY-013236] [Server] The designated data directory C:\laragon\www\fms\mysql-8.4\ is unusable. You can remove all files that the server added to it.
+2025-10-16T10:25:56.016448Z 0 [ERROR] [MY-010119] [Server] Aborting
+2025-10-16T10:25:56.026951Z 0 [System] [MY-015018] [Server] MySQL Server Initialization - end.
+2025-10-16T10:26:56.401885Z 0 [System] [MY-015017] [Server] MySQL Server Initialization - start.
+2025-10-16T10:26:56.407597Z 0 [System] [MY-013169] [Server] C:\laragon\bin\mysql\mysql-8.4.3-winx64\bin\mysqld.exe (mysqld 8.4.3) initializing of server in progress as process 15012
+2025-10-16T10:26:56.409806Z 0 [ERROR] [MY-010457] [Server] --initialize specified but the data directory has files in it. Aborting.
+2025-10-16T10:26:56.410017Z 0 [ERROR] [MY-013236] [Server] The designated data directory C:\laragon\www\fms\mysql-8.4\ is unusable. You can remove all files that the server added to it.
+2025-10-16T10:26:56.412188Z 0 [ERROR] [MY-010119] [Server] Aborting
+2025-10-16T10:26:56.412641Z 0 [System] [MY-015018] [Server] MySQL Server Initialization - end.

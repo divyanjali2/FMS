@@ -1,0 +1,44 @@
+/* Responsive table styles */
+.table-responsive {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+/* Custom scrollbar for tables */
+.table-responsive::-webkit-scrollbar {
+    height: 8px;
+}
+
+.table-responsive::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+.table-responsive::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 4px;
+}
+
+.table-responsive::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+/* Sidebar hover effect */
+.hover-bg-light:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+    transition: background-color 0.2s ease-in-out;
+}
+
+/* Hide scrollbar for mobile sidebar */
+@media (max-width: 991.98px) {
+    .offcanvas {
+        max-width: 280px;
+    }
+}
+
+/* Ensure proper spacing for mobile */
+@media (max-width: 767.98px) {
+    .table-responsive {
+        margin: 0 -1rem;
+        padding: 0 1rem;
+    }
+}
