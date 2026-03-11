@@ -34,23 +34,24 @@
 
                     <div class="col-md-6">
                         <label class="form-label">Vehicle<span class="text-danger">*</span></label>
-                        <select class="form-select" name="vehicle_id" id="create_vehicle_id" required>
+                        <select class="form-select vehicle-select-create" name="vehicle_id" id="create_vehicle_id" required>
                             <option value="">Select vehicle</option>
                             @foreach($vehicles as $vehicle)
                                 <option value="{{ $vehicle->id }}">{{ $vehicle->reg_no }}</option>
                             @endforeach
                         </select>
                     </div>
+                    <small class="text-muted d-none" id="create_vehicle_loader">
+                        <span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
+                        Loading vehicles...
+                    </small>
 
                     <div class="col-md-6">
                         <label class="form-label">Chauffer<span class="text-danger">*</span></label>
-                        <select class="form-select" name="employee_id" required>
-                                <option value="">Select chauffer</option>
+                       <select class="form-select" name="employee_id" id="create_chauffer_id" required>
+                            <option value="">Select chauffer</option>
                             @foreach($chauffers as $c)
-                                <option 
-                                    value="{{ $c['employee_id'] }}"
-                                    data-employee="{{ $c['employee_id'] }}"
-                                >
+                                <option value="{{ $c['employee_id'] }}" data-employee="{{ $c['employee_id'] }}">
                                     {{ $c['preferred_name'] }} ({{ $c['whatsapp_number'] }})
                                 </option>
                             @endforeach
@@ -98,6 +99,16 @@
 
                 <div class="row g-3">
                     <div class="col-md-6">
+                        <label class="form-label">Assigned Start<span class="text-danger">*</span></label>
+                        <input class="form-control" type="datetime-local" name="assigned_start_at" id="edit_start" required>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label">Assigned End</label>
+                        <input class="form-control" type="datetime-local" name="assigned_end_at" id="edit_end">
+                    </div>
+                    
+                    <div class="col-md-6">
                         <label class="form-label">Vehicle<span class="text-danger">*</span></label>
                         <select class="form-select vehicle-select-edit" name="vehicle_id" id="edit_vehicle_id" required>                            
                             <option value="">Select vehicle</option>
@@ -120,16 +131,6 @@
                                 </option>
                             @endforeach
                         </select>
-                    </div>
-
-                    <div class="col-md-6">
-                        <label class="form-label">Assigned Start<span class="text-danger">*</span></label>
-                        <input class="form-control" type="datetime-local" name="assigned_start_at" id="edit_start" required>
-                    </div>
-
-                    <div class="col-md-6">
-                        <label class="form-label">Assigned End</label>
-                        <input class="form-control" type="datetime-local" name="assigned_end_at" id="edit_end">
                     </div>
 
                     <div class="col-md-6">

@@ -52,7 +52,7 @@ class VehicleBookingController extends Controller
             })
             ->get();
 
-        $now = Carbon::now();
+                    $now = Carbon::now();
 
         $vehicles = Vehicle::query()
             ->where('status', '!=', 'disabled')
@@ -73,7 +73,7 @@ class VehicleBookingController extends Controller
         $chauffers = [];
 
         try {
-            $response = Http::timeout(10)->get('https://exploredrive.lk/api/chauffers');
+            $response = Http::timeout(10)->get('http://127.0.0.1:9000/api/chauffers');
 
             if ($response->successful()) {
                 $chauffers = $response->json();
