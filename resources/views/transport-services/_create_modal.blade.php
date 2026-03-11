@@ -1,3 +1,9 @@
+<style>
+    .pac-container {
+        z-index: 9999 !important;
+    }
+</style>
+
 {{-- CREATE MODAL --}}
 <div class="modal fade" id="transportServiceModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-lg">
@@ -60,15 +66,15 @@
 
                     <div class="col-md-6">
                         <label class="form-label">Pickup<span class="text-danger">*</span></label>
-                        <input class="form-control" type="text" name="pickup_location" value="Seeduwa Office">
+                        <input class="form-control" type="text" id="pickup_location" name="pickup_location" value="Seeduwa Office" required >
                     </div>
 
                     <div class="col-md-6">
                         <label class="form-label">Dropoff<span class="text-danger">*</span></label>
-                        <input class="form-control" type="text" name="dropoff_location" required>
+                        <input class="form-control" type="text" id="dropoff_location" name="dropoff_location" required >
                     </div>
 
-                    <div class="col-md-4">
+                    <div class="col-md-6">
                         <label class="form-label">Passengers<span class="text-danger">*</span></label>
                         <input class="form-control" type="number" name="passenger_count" min="1" required>
                     </div>
@@ -107,7 +113,7 @@
                         <label class="form-label">Assigned End</label>
                         <input class="form-control" type="datetime-local" name="assigned_end_at" id="edit_end">
                     </div>
-                    
+
                     <div class="col-md-6">
                         <label class="form-label">Vehicle<span class="text-danger">*</span></label>
                         <select class="form-select vehicle-select-edit" name="vehicle_id" id="edit_vehicle_id" required>                            
@@ -133,14 +139,14 @@
                         </select>
                     </div>
 
-                    <div class="col-md-6">
+                   <div class="col-md-6">
                         <label class="form-label">Pickup<span class="text-danger">*</span></label>
-                        <input class="form-control" type="text" name="pickup_location" id="edit_pickup">
+                        <input class="form-control" type="text" id="edit_pickup" name="pickup_location" required>
                     </div>
 
                     <div class="col-md-6">
                         <label class="form-label">Dropoff<span class="text-danger">*</span></label>
-                        <input class="form-control" type="text" name="dropoff_location" id="edit_dropoff" required>
+                        <input class="form-control" type="text" id="edit_dropoff" name="dropoff_location" required>
                     </div>
 
                     <div class="col-md-4">
