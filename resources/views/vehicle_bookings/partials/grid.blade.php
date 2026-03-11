@@ -256,11 +256,12 @@
                                 $canOpenModal = true;
                             }
 
-                            $creatorName = data_get($booking, 'creator.causer.name', 'N/A');
-                        
-                            if ($creatorName === 'N/A') {
-                                $creatorName = 'Deshan';
-                            }
+                            $creatorName = data_get($booking, 'creator.causer.name')
+                                        ?? data_get($booking, 'creatorName.name')
+                                        ?? 'System';  
+                                                              
+                            // $creatorName = $creatorName === 'N/A' ? 'System' : $creatorName;
+
                             $tooltipHtml =
                                 '<strong>Customer:</strong> '.$booking->salutation.' '.$booking->driver_name.'<br>'.
                                 '<strong>From:</strong> '.$arrival->format('d-m-Y').'<br>'.

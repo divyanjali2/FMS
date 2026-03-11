@@ -281,6 +281,11 @@ Route::post('/vehicle-details/{vehicle}', [VehicleDetailsController::class, 'upd
 
 Route::get('/vehicle-details/export', [VehicleDetailsController::class, 'export'])
     ->name('vehicle-details.export');
+
+
+
+Route::get('/transport-services/available-vehicles', [ScheduleController::class, 'availableVehicles'])
+    ->name('transport-services.available-vehicles');
 });
 
 require __DIR__.'/auth.php';

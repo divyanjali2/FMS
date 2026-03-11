@@ -9,6 +9,7 @@ use App\Models\Vehicle;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Http;
+use App\Models\VehicleType;
 
 class ScheduleController extends Controller
 {
@@ -17,6 +18,8 @@ class ScheduleController extends Controller
         // $chauffers = Chauffer::latest()->get();
 
         $now = Carbon::now();
+
+        $vehicleTypes = VehicleType::orderBy('type_name')->get();
 
         $vehicles = Vehicle::query()
             ->where('status', '!=', 'disabled')
@@ -36,7 +39,7 @@ class ScheduleController extends Controller
         $chauffers = [];
 
         try {
-            $response = Http::timeout(10)->get('http://127.0.0.1:9000/api/chauffers');
+            $response = Http::timeout(10)->get('https://exploredrive.lk/api/chauffers');
 
             if ($response->successful()) {
                 $chauffers = $response->json();
@@ -45,6 +48,42 @@ class ScheduleController extends Controller
             $chauffers = [];
         }
 
-        return view('schedule.index', compact('chauffers', 'vehicles', 'transportServices'));
+        return view('schedule.index', compact('chauffers', 'vehicles', 'transportServices','vehicleTypes'));
+    }
+
+    public function availableVehicles(Request $request)
+    {
+        $start = $request->start;
+        $end   = $request->end;
+
+        if (!$start) {
+            return response()->json([]);
+        }
+
+        $startDate = Carbon::parse($start);
+        $endDate   = $end ? Carbon::parse($end) : Carbon::parse($start);
+
+        $vehicles = Vehicle::query()
+            ->where('status', '!=', 'disabled')
+
+            ->whereDoesntHave('freezes', function ($q) use ($startDate, $endDate) {
+                $q->where('start_date', '<=', $endDate)
+                ->where(function ($qq) use ($startDate) {
+                    $qq->whereNull('end_date')
+                        ->orWhere('end_date', '>=', $startDate);
+                });
+            })
+
+            ->whereDoesntHave('rentals', function ($q) use ($startDate, $endDate) {
+                $q->where(function ($r) use ($startDate, $endDate) {
+                    $r->whereDate('arrival_date', '<=', $endDate)
+                    ->whereDate('departure_date', '>=', $startDate);
+                });
+            })
+
+            ->orderBy('reg_no')
+            ->get(['id', 'reg_no']);
+
+        return response()->json($vehicles);
     }
 }

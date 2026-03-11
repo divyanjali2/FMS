@@ -95,4 +95,9 @@ class Vehicle extends Model
     {
         return $this->hasMany(VehicleFreeze::class);
     }
+
+    public function transportServices()
+    {
+        return $this->hasMany(\App\Models\TransportService::class);
+    }
 }

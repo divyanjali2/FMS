@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Vehicle;
 use App\Models\VehicleType;
 use Illuminate\Http\Request;
 use App\Models\VehicleFreeze;
@@ -11,6 +10,9 @@ use Illuminate\Support\Facades\Log;
 use App\Models\Rental;
 use Illuminate\Support\Facades\DB; 
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Http;
+use App\Models\TransportService;
+use App\Models\Vehicle;
 
 class VehicleBookingController extends Controller
 {
@@ -50,6 +52,36 @@ class VehicleBookingController extends Controller
             })
             ->get();
 
+        $now = Carbon::now();
+
+        $vehicles = Vehicle::query()
+            ->where('status', '!=', 'disabled')
+            ->whereDoesntHave('freezes', function ($q) use ($now) {
+                $q->where('start_date', '<=', $now)
+                  ->where(function ($qq) use ($now) {
+                      $qq->whereNull('end_date')->orWhere('end_date', '>=', $now);
+                  });
+            })
+            ->orderBy('reg_no')
+            ->get();
+
+        $transportServices = TransportService::with(['vehicle','chauffer'])
+            ->latest()
+            ->get();
+
+            
+        $chauffers = [];
+
+        try {
+            $response = Http::timeout(10)->get('https://exploredrive.lk/api/chauffers');
+
+            if ($response->successful()) {
+                $chauffers = $response->json();
+            }
+        } catch (\Throwable $e) {
+            $chauffers = [];
+        }
+
         return view('vehicle_bookings.index', [
             'types'       => VehicleType::with('vehicleCategories')->get(),
             'vehicles' => Vehicle::with(['freezes', 'rentals.creator'])->where('status', 'active')->orderBy('reg_no')->get(),
@@ -63,6 +95,8 @@ class VehicleBookingController extends Controller
                 ->get(),
             'todayArrivals' => $todayArrivals,
             'todayDepartures' => $todayDepartures,
+            'chauffers' => $chauffers,
+            'transportServices' => $transportServices,
         ]);
     }
 

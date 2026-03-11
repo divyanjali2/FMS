@@ -2,9 +2,6 @@
 @section('content')
 
 <div class="container py-4">
-
-    {{-- @include('chauffers._index', ['chauffers' => $chauffers]) --}}
-
     @php
         $dept = strtolower(trim(auth()->user()->department ?? ''));
         $isAdmin = strtolower(trim(auth()->user()->name ?? '')) === 'admin';
@@ -13,17 +10,16 @@
         $canManageTransfers = $isAdmin || $dept === 'transfers department';
     @endphp
 
-
     <div class="d-flex gap-2 my-3">
         @if($canManageShuttle)
-            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#transportServiceModal" data-type="shuttle">
+            {{-- <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#transportServiceModal" data-type="shuttle">
                 Shuttle
-            </button>
+            </button> --}}
         @endif
 
         @if($canManageTransfers)
             <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#transportServiceModal" data-type="transfers">
-                Transfers
+                Add Transfers
             </button>
         @endif
     </div>
@@ -55,6 +51,10 @@
                                 || ($type === 'shuttle' && $canManageShuttle)
                                 || ($type === 'transfers' && $canManageTransfers);
                         @endphp
+
+                        @if($type === 'shuttle')
+                            @continue
+                        @endif
                         <tr>
                             <td>{{ $i + 1 }}</td>
                             <td class="text-capitalize">{{ $ts->type }}</td>
@@ -125,31 +125,6 @@
                 <input type="hidden" name="type" id="ts_type">
 
                 <div class="row g-3">
-                    <div class="col-md-6">
-                        <label class="form-label">Vehicle<span class="text-danger">*</span></label>
-                        <select class="form-select vehicle-select-create" name="vehicle_id" required>
-                            <option value="">Select vehicle</option>
-                            @foreach($vehicles as $vehicle)
-                                <option value="{{ $vehicle->id }}">{{ $vehicle->reg_no }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-
-                    <div class="col-md-6">
-                        <label class="form-label">Chauffer<span class="text-danger">*</span></label>
-                        <select class="form-select chauffer-select-create" name="employee_id" required>
-                                <option value="">Select chauffer</option>
-                            @foreach($chauffers as $c)
-                                <option 
-                                    value="{{ $c['employee_id'] }}"
-                                    data-employee="{{ $c['employee_id'] }}"
-                                >
-                                    {{ $c['preferred_name'] }} ({{ $c['whatsapp_number'] }})
-                                </option>
-                            @endforeach
-                        </select>
-                    </div>
-
                     @php
                         $now = \Carbon\Carbon::now()->format('Y-m-d\TH:i');
                     @endphp
@@ -158,14 +133,58 @@
                         <label class="form-label">
                             Assigned Start<span class="text-danger">*</span>
                         </label>
-                        <input class="form-control" type="datetime-local" name="assigned_start_at" min="{{ $now }}"required>
+                        <input class="form-control" type="datetime-local" name="assigned_start_at" id="create_start" min="{{ $now }}" required>
                     </div>
 
                     <div class="col-md-6">
                         <label class="form-label">
                             Assigned End (optional)
                         </label>
-                        <input class="form-control" type="datetime-local" name="assigned_end_at"min="{{ $now }}">
+                        <input class="form-control" type="datetime-local" name="assigned_end_at" id="create_end" min="{{ $now }}">
+                    </div>
+
+                    <div class="col-12">
+                        <div class="form-check mt-1">
+                            <input class="form-check-input" type="checkbox" id="is_vehicle_assigned" name="is_vehicle_assigned" value="1">
+                            <label class="form-check-label" for="is_vehicle_assigned">
+                                Assign without vehicle
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6" id="create_vehicle_wrapper">
+                        <label class="form-label">Vehicle<span class="text-danger">*</span></label>
+                        <select class="form-select vehicle-select-create" name="vehicle_id" id="create_vehicle_id">
+                            <option value="">Select vehicle</option>
+                            @foreach($vehicles as $vehicle)
+                                <option value="{{ $vehicle->id }}">{{ $vehicle->reg_no }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    <div class="col-md-6 d-none" id="create_vehicle_type_wrapper">
+                        <label class="form-label">Vehicle Type<span class="text-danger">*</span></label>
+                        <select class="form-select" name="vehicle_type_id" id="create_vehicle_type_id">
+                            <option value="">Select vehicle type</option>
+                            @foreach($vehicleTypes as $vehicleType)
+                                <option value="{{ $vehicleType->id }}">{{ $vehicleType->type_name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label">Chauffer<span class="text-danger">*</span></label>
+                        <select class="form-select chauffer-select-create" name="employee_id" required>
+                            <option value="">Select chauffer</option>
+                            @foreach($chauffers as $c)
+                                <option
+                                    value="{{ $c['employee_id'] }}"
+                                    data-employee="{{ $c['employee_id'] }}"
+                                >
+                                    {{ $c['preferred_name'] }} ({{ $c['whatsapp_number'] }})
+                                </option>
+                            @endforeach
+                        </select>
                     </div>
 
                     <div class="col-md-6">
@@ -210,7 +229,7 @@
                 <div class="row g-3">
                     <div class="col-md-6">
                         <label class="form-label">Vehicle<span class="text-danger">*</span></label>
-                        <select class="form-select vehicle-select-edit" name="vehicle_id" id="edit_vehicle_id" required>
+                        <select class="form-select vehicle-select-edit" name="vehicle_id" id="edit_vehicle_id" required>                            
                             <option value="">Select vehicle</option>
                             @foreach($vehicles as $vehicle)
                                 <option value="{{ $vehicle->id }}">{{ $vehicle->reg_no }}</option>
@@ -309,29 +328,11 @@
             ]
         });
 
-    $('.vehicle-select-create').select2({ dropdownParent: $('#transportServiceModal'), width: '100%' });
+        $('.vehicle-select-create').select2({ dropdownParent: $('#transportServiceModal'), width: '100%' });
+        $('.chauffer-select-create').select2({ dropdownParent: $('#transportServiceModal'), width: '100%' });
 
-$('#create_chauffer_select').select2({
-    dropdownParent: $('#transportServiceModal'),
-    width: '100%'
-});
-
-$('#create_chauffer_select').on('select2:select', function (e) {
-    const employeeId = e.params.data.id;
-    $('#create_employee_id').val(employeeId);
-});
-    $('.chauffer-select-create').select2({ dropdownParent: $('#transportServiceModal'), width: '100%' });
-
-    $('.vehicle-select-edit').select2({ dropdownParent: $('#editTransportServiceModal'), width: '100%' });
-    $('.chauffer-select-edit').select2({ dropdownParent: $('#editTransportServiceModal'), width: '100%' });
-
-
-        $('#editTransportServiceModal').on('shown.bs.modal', function () {
-            $('#edit_vehicle_id').select2({
-                dropdownParent: $('#editTransportServiceModal'),
-                width: '100%'
-            });
-        });
+        $('.vehicle-select-edit').select2({ dropdownParent: $('#editTransportServiceModal'), width: '100%' });
+        $('.chauffer-select-edit').select2({ dropdownParent: $('#editTransportServiceModal'), width: '100%' });
 
         const createModal = document.getElementById('transportServiceModal');
         const typeInput = document.getElementById('ts_type');
@@ -362,14 +363,13 @@ $('#create_chauffer_select').on('select2:select', function (e) {
             document.getElementById('edit_dropoff').value = b.getAttribute('data-dropoff');
             document.getElementById('edit_passengers').value = b.getAttribute('data-passengers');
 
-            const vehicleId = b.getAttribute('data-vehicle_id');
-            $('#edit_vehicle_id').val(vehicleId).trigger('change');
+            const currentVehicleId = b.getAttribute('data-vehicle_id');
+            loadAvailableVehicles('#edit_start', '#edit_end', '#edit_vehicle_id', currentVehicleId);
         });
 
         const deleteModal = document.getElementById('deleteTransportServiceModal');
         const deleteForm = document.getElementById('deleteTransportServiceForm');
         const deleteNoteField = document.getElementById('delete_note');
-        const confirmDeleteBtn = document.getElementById('confirmDeleteBtn');
 
         deleteModal.addEventListener('show.bs.modal', function (event) {
             const b = event.relatedTarget;
@@ -378,7 +378,6 @@ $('#create_chauffer_select').on('select2:select', function (e) {
             deleteNoteField.value = '';
         });
 
-        // Validate note before delete
         deleteForm.addEventListener('submit', function (e) {
             const note = deleteNoteField.value.trim();
             if (!note) {
@@ -388,6 +387,73 @@ $('#create_chauffer_select').on('select2:select', function (e) {
             }
         });
 
+        async function loadAvailableVehicles(startSelector, endSelector, vehicleSelector, selectedVehicleId = null) {
+            const start = $(startSelector).val();
+            const end = $(endSelector).val();
+
+            if (!start) {
+                $(vehicleSelector).html('<option value="">Select vehicle</option>').trigger('change');
+                return;
+            }
+
+            try {
+                const response = await fetch(`{{ route('transport-services.available-vehicles') }}?start=${encodeURIComponent(start)}&end=${encodeURIComponent(end)}`);
+                const vehicles = await response.json();
+
+                let options = '<option value="">Select vehicle</option>';
+
+                vehicles.forEach(vehicle => {
+                    const selected = selectedVehicleId && String(selectedVehicleId) === String(vehicle.id) ? 'selected' : '';
+                    options += `<option value="${vehicle.id}" ${selected}>${vehicle.reg_no}</option>`;
+                });
+
+                $(vehicleSelector).html(options).trigger('change');
+            } catch (error) {
+                console.error('Error loading vehicles:', error);
+            }
+        }
+
+        $('#create_start, #create_end').on('change', function () {
+            loadAvailableVehicles('#create_start', '#create_end', '#create_vehicle_id');
+        });
+
+        $('#edit_start, #edit_end').on('change', function () {
+            const selectedVehicleId = $('#edit_vehicle_id').val();
+            loadAvailableVehicles('#edit_start', '#edit_end', '#edit_vehicle_id', selectedVehicleId);
+        });
+
+        function toggleVehicleAssignmentMode() {
+            const checked = $('#is_vehicle_assigned').is(':checked');
+
+            if (checked) {
+                $('#create_vehicle_wrapper').addClass('d-none');
+                $('#create_vehicle_type_wrapper').removeClass('d-none');
+
+                $('#create_vehicle_id').val('').trigger('change');
+                $('#create_vehicle_id').prop('required', false);
+                $('#create_vehicle_type_id').prop('required', true);
+            } else {
+                $('#create_vehicle_wrapper').removeClass('d-none');
+                $('#create_vehicle_type_wrapper').addClass('d-none');
+
+                $('#create_vehicle_type_id').val('');
+                $('#create_vehicle_type_id').prop('required', false);
+                $('#create_vehicle_id').prop('required', true);
+            }
+        }
+
+        $('#is_vehicle_assigned').on('change', function () {
+            toggleVehicleAssignmentMode();
+        });
+
+        $('#transportServiceModal').on('shown.bs.modal', function () {
+            toggleVehicleAssignmentMode();
+        });
+
+        $('#transportServiceModal').on('hidden.bs.modal', function () {
+            $('#is_vehicle_assigned').prop('checked', false);
+            toggleVehicleAssignmentMode();
+        });
     });
 </script>
 

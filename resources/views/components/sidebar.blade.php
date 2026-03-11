@@ -21,7 +21,7 @@
                         ['name' => 'Reports', 'icon' => 'reports.svg', 'route' => 'reports.index', 'permission' => 'view_reports'],                        
                         ['name' => 'Vehicle Details', 'icon' => 'details.svg', 'route' => 'vehicle-details.index', 'permission' => 'manage_vehicle_details'],
                         ['name' => 'Vehicle Analytics', 'icon' => 'analytics.svg', 'route' => 'vehicle-analytics.index', 'permission' => 'manage_accountant'],
-                        ['name' => 'Transits', 'icon' => 'transit.svg', 'route' => 'schedule.index', 'permission' => 'view_transits'],                        
+                        ['name' => 'Transfers', 'icon' => 'transit.svg', 'route' => 'schedule.index', 'permission' => 'view_transits'],                        
                         ['name' => 'Vehicle List', 'icon' => 'vehicle-status.svg', 'route' => 'vehicle-status.index', 'permission' => 'manage_vehicle_list'],
                         ['name' => 'Add Vehicles', 'icon' => 'vehicles.svg', 'route' => 'vehicles.index', 'permission' => 'manage_vehicles'],
                         ['name' => 'Vehicle Utilization', 'icon' => 'calender.svg', 'route' => 'vehicle.bookings', 'permission' => null],

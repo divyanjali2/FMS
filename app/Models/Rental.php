@@ -32,6 +32,7 @@ class Rental extends Model
         'alternative_start_date',
         'change_reason',
         'is_old_vehicle',
+        'created_by'
     ];
 
     protected $casts = [
@@ -76,5 +77,10 @@ class Rental extends Model
         return $this->hasOne(\Spatie\Activitylog\Models\Activity::class, 'subject_id')
             ->where('subject_type', self::class)
             ->orderBy('id', 'asc'); 
+    }
+
+    public function creatorName()
+    {
+        return $this->belongsTo(User::class, 'created_by');
     }
 }

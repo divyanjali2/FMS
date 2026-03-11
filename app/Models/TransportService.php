@@ -23,12 +23,15 @@ class TransportService extends Model
         'delete_note',
         'deleted_by',
         'deleted_at',
+        'vehicle_type_id',
+        'is_vehicle_assigned',
     ];
 
     protected $casts = [
         'assigned_start_at' => 'datetime',
         'assigned_end_at' => 'datetime',
         'passenger_count' => 'integer',
+        'is_vehicle_assigned' => 'boolean',
     ];
 
     public function vehicle(): BelongsTo
@@ -39,5 +42,10 @@ class TransportService extends Model
     public function chauffer(): BelongsTo
     {
         return $this->belongsTo(Chauffer::class);
+    }
+
+    public function vehicleType()
+    {
+        return $this->belongsTo(VehicleType::class);
     }
 }
